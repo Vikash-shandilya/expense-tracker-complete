@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=\, initial-scale=1.0" />
+    <link rel="stylesheet" href="expense.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <form
+      action=""
+      method="post"
+      onsubmit="event.preventDefault(),addexpense()"
+    >
+      <label for="amount">amount</label>
+      <input type="number" name="amount" id="amount" />
+      <label for="description">description</label>
+      <input type="text" name="description" id="description" />
+      <label for="category">Choose a category</label>
+      <select class="form-select" id="category">
+        <option selected>Select an option</option>
+        <option value="petrol">petrol</option>
+        <option value="food">food</option>
+        <option value="rent">rent</option>
+        <option value="other">other</option>
+      </select>
+      <button type="submit">add expense</button>
+    </form>
+    <h2 id="list">List</h2>
+    <script src="expense.js"></script>
+  </body>
+</html>

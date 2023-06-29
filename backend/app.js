@@ -4,16 +4,14 @@ const cors = require("cors");
 const sequelize = require("./database/databse");
 
 const userroute = require("./router/userroute");
+const expenseroute = require("./router/expenserouter");
 
 const app = express();
 app.use(cors());
 app.use(bodyparser.json());
 
 app.use(userroute);
-
-app.use("/", (req, res, next) => {
-  res.send("app in the making");
-});
+app.use(expenseroute);
 
 sequelize
   .sync()

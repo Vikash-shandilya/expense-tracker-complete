@@ -31,7 +31,7 @@ exports.login = async (req, res, next) => {
       userfind.dataValues.password
     );
     if (email === userfind.dataValues.email && passwordMatch) {
-      res.json("you are logged in ");
+      res.json({message:"you are logged in ",usermatch:true});
     } else {
       res.json("your email or password is wrong");
     }

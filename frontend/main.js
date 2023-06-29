@@ -29,6 +29,9 @@ async function submitlogin() {
   };
 
   let res = await axios.post("http://localhost:3000/user/login", myobj);
-  alert(res.data);
+
+  if (res.data.usermatch) {
+    window.location.href = "expense.html";
+  }
   console.log(res);
 }
