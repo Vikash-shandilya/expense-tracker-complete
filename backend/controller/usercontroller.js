@@ -1,4 +1,5 @@
 const user = require("../model/user");
+const bcrypt = require("bcrypt");
 
 exports.submitform = async (req, res, next) => {
   const name = req.body.name;
@@ -9,11 +10,12 @@ exports.submitform = async (req, res, next) => {
   if (userfind) {
     res.json({ res: "this user already exist" });
   } else {
+    const hashedpassword = await bcrypt.hash(password, 10);
     user.create({
       name: name,
       email: email,
       phone_number: phone_number,
-      password: password,
+      password: hashedpassword,
     });
   }
 };
@@ -24,13 +26,14 @@ exports.login = async (req, res, next) => {
   const userfind = await user.findOne({ where: { email: email } });
   console.log(userfind);
   if (userfind) {
-    if (
-      userfind.dataValues.email === email &&
-      userfind.dataValues.password === password
-    ) {
-      res.json("login sucessfull");
-    } else if (userfind.dataValues.password !== password) {
-      res.json("password does not match");
+    const passwordMatch = bcrypt.compare(
+      password,
+      userfind.dataValues.password
+    );
+    if (email === userfind.dataValues.email && passwordMatch) {
+      res.json("you are logged in ");
+    } else {
+      res.json("your email or password is wrong");
     }
   } else {
     res.json("user does not find");
