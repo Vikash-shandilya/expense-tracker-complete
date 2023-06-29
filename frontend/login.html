@@ -4,11 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="login.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <title>Document</title>
   </head>
   <body>
     <h1>login page</h1>
-    <form action="" method="post">
+    <form
+      action=""
+      method="post"
+      onsubmit="event.preventDefault(),submitlogin()"
+    >
       <label for="email"> enter your email</label>
       <input type="email" name="email" id="email" />
       <label for="password">enter your password </label>
@@ -16,5 +21,6 @@
       <button type="submit">login</button>
     </form>
     <a href="signup.html">new user click here </a>
+    <script src="main.js"></script>
   </body>
 </html>

@@ -17,3 +17,22 @@ exports.submitform = async (req, res, next) => {
     });
   }
 };
+
+exports.login = async (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const userfind = await user.findOne({ where: { email: email } });
+  console.log(userfind);
+  if (userfind) {
+    if (
+      userfind.dataValues.email === email &&
+      userfind.dataValues.password === password
+    ) {
+      res.json("login sucessfull");
+    } else if (userfind.dataValues.password !== password) {
+      res.json("password does not match");
+    }
+  } else {
+    res.json("user does not find");
+  }
+};

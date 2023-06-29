@@ -18,3 +18,17 @@ async function submitform() {
 
   console.log(res);
 }
+
+async function submitlogin() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  myobj = {
+    email,
+    password,
+  };
+
+  let res = await axios.post("http://localhost:3000/user/login", myobj);
+  alert(res.data);
+  console.log(res);
+}
