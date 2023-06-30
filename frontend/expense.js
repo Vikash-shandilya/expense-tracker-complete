@@ -1,5 +1,8 @@
 window.addEventListener("DOMContentLoaded", async () => {
+  const token = localStorage.getItem("token");
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`; //default axios header
   let res = await axios.get("http://localhost:3000/expense");
+  console.log(res);
 
   for (let i = 0; i < res.data.length; i++) {
     let newdiv = document.createElement("div");

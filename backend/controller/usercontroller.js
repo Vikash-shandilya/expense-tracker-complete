@@ -1,6 +1,8 @@
 const user = require("../model/user");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const secret_key = "vikashkumarjha";
 exports.submitform = async (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
@@ -11,12 +13,16 @@ exports.submitform = async (req, res, next) => {
     res.json({ res: "this user already exist" });
   } else {
     const hashedpassword = await bcrypt.hash(password, 10);
-    user.create({
-      name: name,
-      email: email,
-      phone_number: phone_number,
-      password: hashedpassword,
-    });
+    user
+      .create({
+        name: name,
+        email: email,
+        phone_number: phone_number,
+        password: hashedpassword,
+      })
+      .then((res) => {
+        console.log(res);
+      });
   }
 };
 
@@ -31,7 +37,9 @@ exports.login = async (req, res, next) => {
       userfind.dataValues.password
     );
     if (email === userfind.dataValues.email && passwordMatch) {
-      res.json({message:"you are logged in ",usermatch:true});
+      const id = userfind.dataValues.id;
+      const token = jwt.sign({ id }, secret_key);
+      res.json(token); //send this token to backend to save in localstorage
     } else {
       res.json("your email or password is wrong");
     }
