@@ -42,3 +42,38 @@ async function deleted(e) {
   console.log(res);
   window.location.reload();
 }
+
+//premium buy code
+
+async function premium() {
+  let res = await axios.get("http://localhost:3000/get_order_details");
+  let orderdetails = res.data.response;
+  console.log(orderdetails);
+  let options = {
+    key: res.data.key_id,
+    amount: orderdetails.amount,
+    currency: orderdetails.currency,
+    name: "testing",
+    description: "Test Payment",
+    order_id: orderdetails.id,
+    handler: async (response) => {
+      await axios.post("http://localhost:3000/updateorder", {
+        order_id: orderdetails.id,
+        payment_id: response.razorpay_payment_id,
+      });
+      console.log("now its time to handle");
+    },
+  };
+  let rzp = new Razorpay(options);
+  rzp.open();
+
+  rzp.on("payment.failed", async function (response) {
+    const order_id = response.error.metadata.order_id;
+    const payment_id = response.error.metadata.payment_id;
+    console.log(order_id, payment_id);
+    await axios.post("http://localhost:3000/paymentfailed", {
+      order_id: order_id,
+      payment_id: payment_id,
+    });
+  });
+}
