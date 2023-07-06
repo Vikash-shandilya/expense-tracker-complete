@@ -1,5 +1,6 @@
 const { json } = require("body-parser");
 const order = require("../model/order");
+const user = require("../model/user");
 const Razorpay = require("razorpay");
 
 const razorpay = new Razorpay({
@@ -37,6 +38,11 @@ exports.updateorder = async (req, res, next) => {
   payment.paymentid = payment_id;
   payment.status = "Complete";
   await payment.save();
+  let useritem = await user.findOne({ where: { id: req.user.id } });
+  useritem.ispremium = true;
+  await useritem.save();
+
+  res.json({ payment: true });
 };
 
 exports.paymentfailed = async (req, res, next) => {
@@ -47,4 +53,9 @@ exports.paymentfailed = async (req, res, next) => {
   payment_fail.status = "failed";
 
   await payment_fail.save();
+};
+
+exports.ifpremium = async (req, res, next) => {
+  let result = await user.findOne({ where: { id: req.user.id } });
+  res.json(result.ispremium);
 };

@@ -29,7 +29,17 @@ async function submitlogin() {
   };
 
   let res = await axios.post("http://localhost:3000/user/login", myobj);
-  localStorage.setItem("token", res.data);
+
+  if (res.data.islogin) {
+    localStorage.setItem("token", res.data.token);
+    window.location.href = "expense.html";
+  }
+  if (res.data.ispremium) {
+    console.log(res.data.ispremium);
+    let button = document.getElementById("premiumuser");
+    const newText = document.createTextNode("you are a premium user ");
+    button.parentNode.replaceChild(newText, button);
+  }
 
   console.log(res);
 }

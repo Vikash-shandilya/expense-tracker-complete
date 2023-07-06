@@ -6,6 +6,7 @@ const sequelize = require("./database/databse");
 const userroute = require("./router/userroute");
 const expenseroute = require("./router/expenserouter");
 const orderroute = require("./router/orderroute");
+const leaderroute = require("./router/leaderboard");
 
 const expensesmodel = require("./model/expense");
 const usermodel = require("./model/user");
@@ -19,6 +20,7 @@ app.use(bodyparser.json());
 app.use(userroute);
 app.use(expenseroute);
 app.use(orderroute);
+app.use(leaderroute);
 
 usermodel.hasMany(expensesmodel);
 expensesmodel.belongsTo(usermodel);

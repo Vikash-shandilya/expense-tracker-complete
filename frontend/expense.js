@@ -23,6 +23,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     newdiv.appendChild(newli);
     document.getElementById("list").appendChild(newdiv);
   }
+  let check = await axios.get("http://localhost:3000/ifpremium");
+  if (check.data) {
+    let button = document.getElementById("premiumuser");
+    const newText = document.createTextNode("You are a premium user.");
+    button.parentNode.replaceChild(newText, button);
+
+    const newBtn = document.createElement("button"); // Corrected element creation
+    newBtn.textContent = "Show leaderboard";
+    newBtn.addEventListener("click", showleaderboard); // Corrected event listener assignment
+    document.getElementById("twobtn").appendChild(newBtn);
+  }
 });
 
 async function addexpense() {
@@ -57,11 +68,16 @@ async function premium() {
     description: "Test Payment",
     order_id: orderdetails.id,
     handler: async (response) => {
-      await axios.post("http://localhost:3000/updateorder", {
+      let res = await axios.post("http://localhost:3000/updateorder", {
         order_id: orderdetails.id,
         payment_id: response.razorpay_payment_id,
       });
-      console.log("now its time to handle");
+      if (res.data.payment) {
+        window.location.reload();
+        // let button = document.getElementById("premiumuser");
+        // const newText = document.createTextNode("you are a premium user ");
+        // button.parentNode.replaceChild(newText, button);
+      }
     },
   };
   let rzp = new Razorpay(options);
@@ -76,4 +92,18 @@ async function premium() {
       payment_id: payment_id,
     });
   });
+}
+
+async function showleaderboard() {
+  let res = await axios.get("http://localhost:3000/showleaderboard");
+  console.log(res);
+  console.log(res.data.length);
+  for (let i = 0; i < res.data.length; i++) {
+    let newdiv = document.createElement("div");
+    let newli = document.createElement("li");
+    newli.textContent = `${res.data[i].user.name}- total expense=${res.data[i].totalExpense}`;
+
+    newdiv.appendChild(newli);
+    document.getElementById("list").appendChild(newdiv);
+  }
 }

@@ -29,9 +29,16 @@
       </select>
       <button type="submit">add expense</button>
     </form>
-    <button type="submit" onclick="event.preventDefault(),premium()">
-      Buy premium
-    </button>
+    <div id="twobtn">
+      <button
+        type="submit"
+        onclick="event.preventDefault(),premium()"
+        id="premiumuser"
+      >
+        Buy premium
+      </button>
+    </div>
+
     <h2 id="list">List</h2>
     <script src="expense.js"></script>
   </body>

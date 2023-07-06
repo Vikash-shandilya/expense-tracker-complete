@@ -38,8 +38,14 @@ exports.login = async (req, res, next) => {
     );
     if (email === userfind.dataValues.email && passwordMatch) {
       const id = userfind.dataValues.id;
+
+      console.log(userfind.dataValues.ispremium, "ispremium");
       const token = jwt.sign({ id }, secret_key);
-      res.json(token); //send this token to backend to save in localstorage
+      res.json({
+        token: token,
+        islogin: true,
+        ispremium: userfind.dataValues.ispremium,
+      }); //send this token to backend to save in localstorage
     } else {
       res.json("your email or password is wrong");
     }

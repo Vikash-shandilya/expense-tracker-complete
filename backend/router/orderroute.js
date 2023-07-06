@@ -16,4 +16,6 @@ router.post(
   ordercontroller.paymentfailed
 );
 
+router.get("/ifpremium", authtoken.authtoken, ordercontroller.ifpremium);
+
 module.exports = router;
