@@ -23,6 +23,9 @@ const user = sequelize.define("user", {
   ispremium: {
     type: Sequelize.BOOLEAN,
   },
+  total_expenses: {
+    type: Sequelize.INTEGER,
+  },
 });
 
 module.exports = user;

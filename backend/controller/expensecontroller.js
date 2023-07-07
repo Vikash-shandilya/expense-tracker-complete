@@ -1,4 +1,5 @@
 const expense = require("../model/expense");
+const user = require("../model/user");
 
 exports.addexpense = (req, res, next) => {
   const amount = req.body.amount;
@@ -14,7 +15,21 @@ exports.addexpense = (req, res, next) => {
 
   newExpense
     .save()
-    .then(() => {
+    .then(async () => {
+      console.log("start ");
+      let userfound = await user.findOne({ where: { id: req.user.id } });
+      console.log("first line");
+      let previous_expenses = userfound.total_expenses;
+      console.log(previous_expenses);
+      console.log(typeof amount);
+      if (previous_expenses === null) {
+        previous_expenses = 0;
+      }
+      console.log("second line");
+      userfound.total_expenses = previous_expenses + parseInt(amount);
+      await userfound.save();
+      console.log("final line ");
+
       res.status(200).json("Expense added");
     })
     .catch((error) => {

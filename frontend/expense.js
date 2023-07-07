@@ -101,7 +101,7 @@ async function showleaderboard() {
   for (let i = 0; i < res.data.length; i++) {
     let newdiv = document.createElement("div");
     let newli = document.createElement("li");
-    newli.textContent = `${res.data[i].user.name}- total expense=${res.data[i].totalExpense}`;
+    newli.textContent = `${res.data[i].name}- total expense=${res.data[i].total_expenses}`;
 
     newdiv.appendChild(newli);
     document.getElementById("list").appendChild(newdiv);
