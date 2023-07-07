@@ -50,7 +50,6 @@ async function deleted(e) {
   let id = e.target.getAttribute("productid");
   console.log(id);
   let res = await axios.get(`http://localhost:3000/expenses/deleted/${id}`);
-  console.log(res);
   window.location.reload();
 }
 
