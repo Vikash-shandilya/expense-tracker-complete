@@ -8,4 +8,6 @@ router.post("/user/signup", usercontroller.submitform);
 
 router.post("/user/login", usercontroller.login);
 
+router.post("/user/forgotpass", usercontroller.passwordreset);
+
 module.exports = router;

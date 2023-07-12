@@ -43,3 +43,7 @@ async function submitlogin() {
 
   console.log(res);
 }
+
+async function openform() {
+  window.location.href = "forgotpass.html";
+}

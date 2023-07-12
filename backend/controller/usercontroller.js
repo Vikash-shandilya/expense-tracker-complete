@@ -1,6 +1,7 @@
 const user = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendinblue = require("@getbrevo/brevo");
 
 const secret_key = "vikashkumarjha";
 exports.submitform = async (req, res, next) => {
@@ -30,7 +31,7 @@ exports.login = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const userfind = await user.findOne({ where: { email: email } });
-  console.log(userfind);
+
   if (userfind) {
     const passwordMatch = bcrypt.compare(
       password,
@@ -51,5 +52,38 @@ exports.login = async (req, res, next) => {
     }
   } else {
     res.json("user does not find");
+  }
+};
+
+exports.passwordreset = async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    let userfound = await user.findOne({ where: { email: email } });
+    console.log(userfound);
+    if (userfound) {
+      const defaultClient = sendinblue.ApiClient.instance;
+      console.log(defaultClient, "defaultclient");
+      defaultClient.authentications["api-key"].apiKey =
+        "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";
+
+      const apiInstance = new sendinblue.TransactionalEmailsApi();
+      const sendSmtpEmail = new sendinblue.SendSmtpEmail();
+      sendSmtpEmail.sender = {
+        name: "vikash",
+        email: "vikashjha041@gmail.com",
+      };
+      sendSmtpEmail.to = [{ email: email }];
+      sendSmtpEmail.subject = "Password Reset";
+      sendSmtpEmail.textContent =
+        "Click the following link to reset your password: [RESET_LINK]";
+      let response = await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+      res.json(response);
+    } else {
+      res.json("user does not found");
+    }
+  } catch (error) {
+    console.log(error);
+    res.json("failed in sending reset link");
   }
 };
