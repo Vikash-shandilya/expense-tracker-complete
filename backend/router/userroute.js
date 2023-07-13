@@ -10,4 +10,6 @@ router.post("/user/login", usercontroller.login);
 
 router.post("/user/forgotpass", usercontroller.passwordreset);
 
+router.post("/password/reset/:token", usercontroller.passwordresetfinal);
+
 module.exports = router;

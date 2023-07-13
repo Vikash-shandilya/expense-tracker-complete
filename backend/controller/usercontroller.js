@@ -2,6 +2,7 @@ const user = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sendinblue = require("@getbrevo/brevo");
+const forgotpasstable = require("../model/forgotpass");
 
 const secret_key = "vikashkumarjha";
 exports.submitform = async (req, res, next) => {
@@ -33,10 +34,12 @@ exports.login = async (req, res, next) => {
   const userfind = await user.findOne({ where: { email: email } });
 
   if (userfind) {
-    const passwordMatch = bcrypt.compare(
+    const passwordMatch = await bcrypt.compare(
       password,
       userfind.dataValues.password
     );
+    console.log(passwordMatch, "passmatch");
+    console.log(userfind.dataValues, "userfind");
     if (email === userfind.dataValues.email && passwordMatch) {
       const id = userfind.dataValues.id;
 
@@ -59,12 +62,19 @@ exports.passwordreset = async (req, res, next) => {
   try {
     const email = req.body.email;
     let userfound = await user.findOne({ where: { email: email } });
-    console.log(userfound);
+
     if (userfound) {
+      const newrow = await forgotpasstable.create({
+        userId: userfound.dataValues.id,
+        isActive: true,
+      });
+      await newrow.save();
       const defaultClient = sendinblue.ApiClient.instance;
-      console.log(defaultClient, "defaultclient");
+
+      const token = await generatetoken(userfound.dataValues.id);
+
       defaultClient.authentications["api-key"].apiKey =
-        "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";
+        "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";
 
       const apiInstance = new sendinblue.TransactionalEmailsApi();
       const sendSmtpEmail = new sendinblue.SendSmtpEmail();
@@ -74,11 +84,16 @@ exports.passwordreset = async (req, res, next) => {
       };
       sendSmtpEmail.to = [{ email: email }];
       sendSmtpEmail.subject = "Password Reset";
-      sendSmtpEmail.textContent =
-        "Click the following link to reset your password: [RESET_LINK]";
+      sendSmtpEmail.htmlContent = `Click the following link to reset your password:
+  <a href="file:///C:/Users/vikash/Desktop/sharpener/expense-tracker-full/frontend/updatepasswordform.html?token=${token}" >Reset Password</a>`;
+
       let response = await apiInstance.sendTransacEmail(sendSmtpEmail);
 
-      res.json(response);
+      res.json({
+        response: response,
+        token: token,
+        url: `file:///C:/Users/vikash/Desktop/sharpener/expense-tracker-full/frontend/updatepasswordform.html?token=${token}`,
+      });
     } else {
       res.json("user does not found");
     }
@@ -86,4 +101,34 @@ exports.passwordreset = async (req, res, next) => {
     console.log(error);
     res.json("failed in sending reset link");
   }
+};
+
+async function generatetoken(id) {
+  const usertoken = await forgotpasstable.findOne({
+    where: { userId: id, isActive: true },
+  });
+
+  return usertoken.id;
+}
+
+exports.passwordresetfinal = async (req, res, next) => {
+  console.log(req.params, req.body);
+  const token = req.params.token;
+  const newpassword = req.body.password;
+
+  const ifExist = await forgotpasstable.findOne({
+    where: { id: token, isActive: true },
+  });
+  console.log(token, newpassword, ifExist);
+  if (ifExist.isActive) {
+    const userid = ifExist.userId;
+    const userdetails = await user.findOne({ where: { id: userid } });
+    const changedpassword = await bcrypt.hash(newpassword, 10);
+    userdetails.password = changedpassword;
+    console.log(changedpassword, "changedpass");
+    await userdetails.save();
+  }
+  ifExist.isActive = false;
+  await ifExist.save();
+  res.json("password reset successfull");
 };
