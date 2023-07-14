@@ -106,3 +106,106 @@ async function showleaderboard() {
     document.getElementById("list").appendChild(newdiv);
   }
 }
+
+async function choosemonth() {
+  const ifpremium = await axios.get("http://localhost:3000/ifpremium");
+  console.log(ifpremium.data);
+  if (ifpremium.data) {
+    const monthname = document.getElementById("month").value;
+    console.log(monthname);
+    const response = await axios.get(
+      `http://localhost:3000/monthlyexpense/${monthname}`
+    );
+    let week1 = [];
+    let week2 = [];
+    let week3 = [];
+    let week4 = [];
+    for (let i = 0; i < response.data.length; i++) {
+      let date = response.data[i].createdAt.split("-")[2].slice(0, 2);
+      if (date >= 1 && date <= 7) {
+        week1.push(response.data[i]);
+      } else if (date >= 8 && date <= 15) {
+        week2.push(response.data[i]);
+      } else if (date >= 16 && date <= 23) {
+        week3.push(response.data[i]);
+      } else {
+        week4.push(response.data[i]);
+      }
+    }
+    const expense1 = week1.reduce((sum, obj) => sum + obj.amount, 0);
+    const expense2 = week2.reduce((sum, obj) => sum + obj.amount, 0);
+    const expense3 = week3.reduce((sum, obj) => sum + obj.amount, 0);
+    const expense4 = week4.reduce((sum, obj) => sum + obj.amount, 0);
+
+    const catexpense1 = week1.reduce((totals, obj) => {
+      const category = obj.category;
+      const amount = obj.amount;
+      if (totals[category]) {
+        totals[category] += amount;
+      } else {
+        totals[category] = amount;
+      }
+      return totals;
+    }, {});
+    const catexpense2 = week2.reduce((totals, obj) => {
+      const category = obj.category;
+      const amount = obj.amount;
+      if (totals[category]) {
+        totals[category] += amount;
+      } else {
+        totals[category] = amount;
+      }
+      return totals;
+    }, {});
+    const catexpense3 = week3.reduce((totals, obj) => {
+      const category = obj.category;
+      const amount = obj.amount;
+      if (totals[category]) {
+        totals[category] += amount;
+      } else {
+        totals[category] = amount;
+      }
+      return totals;
+    }, {});
+    const catexpense4 = week4.reduce((totals, obj) => {
+      const category = obj.category;
+      const amount = obj.amount;
+      if (totals[category]) {
+        totals[category] += amount;
+      } else {
+        totals[category] = amount;
+      }
+      return totals;
+    }, {});
+    console.log(expense1, expense2, expense3, expense4);
+    console.log(catexpense1, catexpense2, catexpense3, catexpense4);
+    const week1st = document.getElementById("1stweek");
+    week1st.textContent = expense1;
+    const week2st = document.getElementById("2ndweek");
+    week2st.textContent = expense2;
+    const week3st = document.getElementById("3rdweek");
+    week3st.textContent = expense3;
+    const week4st = document.getElementById("4thweek");
+    week4st.textContent = expense4;
+
+    const cat1 = JSON.stringify(catexpense1);
+    const cat2 = JSON.stringify(catexpense2);
+    const cat3 = JSON.stringify(catexpense3);
+    const cat4 = JSON.stringify(catexpense4);
+
+    const cat1st = document.getElementById("description1");
+    cat1st.textContent = cat1;
+    const cat2st = document.getElementById("description2");
+    cat2st.textContent = cat2;
+    const cat3st = document.getElementById("description3");
+    cat3st.textContent = cat3;
+    const cat4st = document.getElementById("description4");
+    cat4st.textContent = cat4;
+
+    const total = expense1 + expense2 + expense3 + expense4;
+    const totalst = document.getElementById("total");
+    totalst.textContent = total;
+  } else {
+    alert("You are not a premium user");
+  }
+}
