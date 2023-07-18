@@ -29,10 +29,71 @@ window.addEventListener("DOMContentLoaded", async () => {
     const newText = document.createTextNode("You are a premium user.");
     button.parentNode.replaceChild(newText, button);
 
-    const newBtn = document.createElement("button"); // Corrected element creation
+    const newBtn = document.createElement("button");
+    const newBtn2 = document.createElement("button");
     newBtn.textContent = "Show leaderboard";
-    newBtn.addEventListener("click", showleaderboard); // Corrected event listener assignment
+    newBtn2.textContent = "downloadyoureport";
+
+    newBtn2.style.marginLeft = "10px";
+
+    newBtn.addEventListener("click", showleaderboard);
+    newBtn2.addEventListener("click", downloadreport);
+
     document.getElementById("twobtn").appendChild(newBtn);
+    document.getElementById("twobtn").appendChild(newBtn2);
+
+    let result = await axios.get("http://localhost:3000/getpreviousdownloads");
+    console.log(result);
+    const openButton = document.createElement("button");
+    openButton.textContent = "previous downloads";
+
+    const slidingWindow = document.createElement("div");
+    slidingWindow.id = "slidingWindow";
+    slidingWindow.style.width = "500px";
+    slidingWindow.style.height = "650px";
+    slidingWindow.style.backgroundColor = "#f0f0f0";
+    slidingWindow.style.position = "fixed";
+    slidingWindow.style.top = "0";
+    slidingWindow.style.right = "-520px";
+    slidingWindow.style.transition = "right 0.1s ease-out";
+
+    const windowContent = document.createElement("div");
+    windowContent.id = "windowContent";
+    windowContent.style.padding = "20px";
+
+    const closeButton = document.createElement("button");
+    closeButton.textContent = "Close";
+
+    openButton.addEventListener("click", () => {
+      slidingWindow.classList.toggle("open");
+      slidingWindow.style.right = slidingWindow.classList.contains("open")
+        ? "0"
+        : "-520px";
+    });
+
+    for (let j = 0; j < result.data.data.length; j++) {
+      let newdiv = document.createElement("div");
+      let newli = document.createElement("li");
+      newli.textContent = `${result.data.data[j].createdAt}`;
+      let button3 = document.createElement("button");
+      button3.textContent = "download";
+      button3.onclick = () => {
+        const createlink = document.createElement("a");
+        createlink.href = result.data.data[j].fileurl;
+        createlink.download = "expense.txt";
+        createlink.click();
+        console.log(res);
+        alert("Your file is downloaded");
+      };
+      newdiv.appendChild(newli);
+      newdiv.appendChild(button3);
+
+      windowContent.appendChild(newdiv);
+      slidingWindow.appendChild(windowContent);
+    }
+
+    document.getElementById("twobtn").appendChild(openButton);
+    document.getElementById("twobtn").appendChild(slidingWindow);
   }
 });
 
@@ -105,6 +166,16 @@ async function showleaderboard() {
     newdiv.appendChild(newli);
     document.getElementById("list").appendChild(newdiv);
   }
+}
+
+async function downloadreport() {
+  let res = await axios.get("http://localhost:3000/download");
+  const createlink = document.createElement("a");
+  createlink.href = res.data.fileurl;
+  createlink.download = "expense.txt";
+  createlink.click();
+  console.log(res);
+  alert("Your file is downloaded");
 }
 
 async function choosemonth() {

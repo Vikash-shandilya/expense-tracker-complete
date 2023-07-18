@@ -8,12 +8,14 @@ const expenseroute = require("./router/expenserouter");
 const orderroute = require("./router/orderroute");
 const leaderroute = require("./router/leaderboard");
 const premiumroute = require("./router/premumroute");
+const downloadroute = require("./router/downloadroute");
 
 const expensesmodel = require("./model/expense");
 const usermodel = require("./model/user");
 const ordermodel = require("./model/order");
 const order = require("./model/order");
 const forgotpasstable = require("./model/forgotpass");
+const downloadmodel = require("./model/downloadmodel");
 
 const app = express();
 app.use(cors());
@@ -24,7 +26,7 @@ app.use(expenseroute);
 app.use(orderroute);
 app.use(leaderroute);
 app.use(premiumroute);
-
+app.use(downloadroute);
 usermodel.hasMany(expensesmodel);
 expensesmodel.belongsTo(usermodel);
 
@@ -33,6 +35,9 @@ ordermodel.belongsTo(usermodel);
 
 usermodel.hasMany(forgotpasstable);
 forgotpasstable.belongsTo(usermodel);
+
+usermodel.hasMany(downloadmodel);
+downloadmodel.belongsTo(usermodel);
 
 sequelize
   .sync()
