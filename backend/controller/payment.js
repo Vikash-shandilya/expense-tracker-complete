@@ -4,12 +4,12 @@ const user = require("../model/user");
 const Razorpay = require("razorpay");
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_ahHdCy6I7ZLyqR",
-  key_secret: "JhbXKU4ixLBQYPaFzyfLkKFD",
+  key_id: "rzp_test_p0SgRubxtD4AeR",
+  key_secret: "OMHc9SIYyDkFBUT9wuZuVHMW",
 });
 
 exports.getOrderDetails = (req, res, next) => {
-  console.log(req.user.id);
+  console.log(req.user.id, "payment");
   const amount = 2500;
   razorpay.orders.create({ amount, currency: "INR" }, (err, response) => {
     if (err) {

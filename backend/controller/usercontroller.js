@@ -74,7 +74,7 @@ exports.passwordreset = async (req, res, next) => {
       const token = await generatetoken(userfound.dataValues.id);
 
       defaultClient.authentications["api-key"].apiKey =
-        "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";
+        process.env.sendinblue_api_key;
 
       const apiInstance = new sendinblue.TransactionalEmailsApi();
       const sendSmtpEmail = new sendinblue.SendSmtpEmail();

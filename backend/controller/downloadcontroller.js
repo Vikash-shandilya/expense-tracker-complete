@@ -3,8 +3,8 @@ const expense = require("../model/expense");
 const downloadfile = require("../model/downloadmodel");
 
 const s3 = new aws.S3({
-  accessKeyId: process.env.accessKeyId,
-  secretAccessKey: process.env.secretAccessKey,
+  accessKeyId: "AKIAR3QFIH3C76J3J5PN",
+  secretAccessKey: "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",
 });
 
 async function uploadToS3(data, filename) {

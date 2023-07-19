@@ -2,6 +2,10 @@ const express = require("express");
 const bodyparser = require("body-parser");
 const cors = require("cors");
 const sequelize = require("./database/databse");
+const helmet = require("helmet");
+const morgon = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
 const userroute = require("./router/userroute");
 const expenseroute = require("./router/expenserouter");
@@ -17,10 +21,16 @@ const order = require("./model/order");
 const forgotpasstable = require("./model/forgotpass");
 const downloadmodel = require("./model/downloadmodel");
 
-const app = express();
 require("dotenv").config();
+const app = express();
+
+app.use(helmet());
 app.use(cors());
 app.use(bodyparser.json());
+const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
+  flags: "a",
+});
+app.use(morgon("combined", { stream: logStream }));
 
 app.use(userroute);
 app.use(expenseroute);
@@ -39,6 +49,7 @@ forgotpasstable.belongsTo(usermodel);
 
 usermodel.hasMany(downloadmodel);
 downloadmodel.belongsTo(usermodel);
+console.log(process.env.database_username, "pass");
 
 sequelize
   .sync()
