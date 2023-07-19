@@ -10,6 +10,6 @@ router.get(
   authtoken.authtoken,
   expensecontroller.deleted
 );
-router.get("/expense", authtoken.authtoken, expensecontroller.index);
+router.post("/showexpense", authtoken.authtoken, expensecontroller.index);
 
 module.exports = router;

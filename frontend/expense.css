@@ -66,5 +66,27 @@ body {
     z-index: 9999;
     /* Additional styling for the overlay screen */
   }
+
+
+  .pagination {
+    margin: 20px 0;
+  }
+  
+  .pagination a {
+    display: inline-block;
+    padding: 10px;
+    margin-right: 5px;
+    text-decoration: none;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .pagination a.active {
+    background-color: #ccc;
+  }
+  
+  
+  
   
   

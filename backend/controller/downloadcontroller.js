@@ -3,8 +3,8 @@ const expense = require("../model/expense");
 const downloadfile = require("../model/downloadmodel");
 
 const s3 = new aws.S3({
-  accessKeyId: "AKIAR3QFIH3C76J3J5PN",
-  secretAccessKey: "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",
+  accessKeyId: process.env.accessKeyId,
+  secretAccessKey: process.env.secretAccessKey,
 });
 
 async function uploadToS3(data, filename) {
@@ -49,10 +49,10 @@ async function getfile(req, res, next) {
 }
 
 async function getpreviousdownloads(req, res, next) {
-  const data = await downloadfile.findAll(
-    { where: { userId: req.user.id } },
-    attributes[("createdAt", "fileurl")]
-  );
+  const data = await downloadfile.findAll({
+    where: { userId: req.user.id },
+    attributes: ["createdAt", "fileurl"],
+  });
   res.status(200).json({ message: "success", data: data });
 }
 

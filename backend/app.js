@@ -18,6 +18,7 @@ const forgotpasstable = require("./model/forgotpass");
 const downloadmodel = require("./model/downloadmodel");
 
 const app = express();
+require("dotenv").config();
 app.use(cors());
 app.use(bodyparser.json());
 

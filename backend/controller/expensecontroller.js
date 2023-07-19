@@ -93,13 +93,33 @@ exports.deleted = async (req, res, next) => {
   }
 };
 
-exports.index = (req, res, next) => {
-  expense
-    .findAll(
-      { where: { userId: req.user.id } },
-      (attributes = ["id", "amount", "description", "category"])
-    )
-    .then((prod) => {
-      res.json(prod);
+exports.index = async (req, res, next) => {
+  const pageSize = parseInt(req.body.rowperpage) || 5; // Number of items per page
+  const currentPage = parseInt(req.body.current_page) || 1; // Current page number
+  console.log("page size", pageSize, "current page", currentPage);
+
+  try {
+    const offset = (currentPage - 1) * pageSize; //number of item to skip
+
+    const expenses = await expense.findAll({
+      where: { userId: req.user.id },
+      attributes: ["id", "amount", "description", "category"],
+      limit: pageSize,
+      offset: offset,
     });
+
+    const totalCount = await expense.count({ where: { userId: req.user.id } });
+
+    const response = {
+      expenses,
+      currentPage,
+      pageSize,
+      totalCount,
+    };
+
+    res.json(response);
+  } catch (error) {
+    console.error("Error retrieving paginated expenses:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };

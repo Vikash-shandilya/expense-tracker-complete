@@ -1,28 +1,8 @@
 window.addEventListener("DOMContentLoaded", async () => {
   const token = localStorage.getItem("token");
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`; //default axios header
-  let res = await axios.get("http://localhost:3000/expense");
-  console.log(res);
-
-  for (let i = 0; i < res.data.length; i++) {
-    let newdiv = document.createElement("div");
-    let newli = document.createElement("li");
-    let delete_btn = document.createElement("button");
-
-    delete_btn.onclick = deleted;
-    delete_btn.type = "submit";
-    delete_btn.textContent = "delete";
-
-    delete_btn.setAttribute("productid", res.data[i].id);
-
-    console.log(res.data);
-
-    newli.textContent = `${res.data[i].amount}-${res.data[i].description}- on ${res.data[i].category}`;
-
-    newli.appendChild(delete_btn);
-    newdiv.appendChild(newli);
-    document.getElementById("list").appendChild(newdiv);
-  }
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  //default axios header
+  await showlist(1);
   let check = await axios.get("http://localhost:3000/ifpremium");
   if (check.data) {
     let button = document.getElementById("premiumuser");
@@ -97,6 +77,47 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+async function showlist(current_page) {
+  const rowperpage = localStorage.getItem("rowperpage");
+  console.log(rowperpage);
+  const myobj = {
+    rowperpage,
+    current_page,
+  };
+  let res = await axios.post(`http://localhost:3000/showexpense/`, myobj);
+  console.log(res);
+
+  const listElement = document.getElementById("list");
+  listElement.innerHTML = ""; // Clear existing content
+
+  for (let i = 0; i < res.data.expenses.length; i++) {
+    let newdiv = document.createElement("div");
+    let newli = document.createElement("li");
+    let delete_btn = document.createElement("button");
+
+    delete_btn.onclick = deleted;
+    delete_btn.type = "submit";
+    delete_btn.textContent = "delete";
+
+    delete_btn.setAttribute("productid", res.data.expenses[i].id);
+
+    console.log(res.data);
+
+    newli.textContent = `${res.data.expenses[i].amount}-${res.data.expenses[i].description}- on ${res.data.expenses[i].category}`;
+
+    newli.appendChild(delete_btn);
+    newdiv.appendChild(newli);
+    listElement.appendChild(newdiv);
+  }
+}
+
+function rowperpage() {
+  console.log("hello");
+  item_no = document.getElementById("rowperpage").value;
+  console.log(item_no);
+  localStorage.setItem("rowperpage", item_no);
+}
+
 async function addexpense() {
   const amount = document.getElementById("amount").value;
   const description = document.getElementById("description").value;
@@ -166,6 +187,12 @@ async function showleaderboard() {
     newdiv.appendChild(newli);
     document.getElementById("list").appendChild(newdiv);
   }
+}
+
+async function selectpage() {
+  const page = document.getElementById("pageno").value;
+  console.log(page);
+  await showlist(parseInt(page));
 }
 
 async function downloadreport() {

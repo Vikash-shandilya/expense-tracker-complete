@@ -38,6 +38,26 @@
         Buy premium
       </button>
     </div>
+    <form
+      action=""
+      onsubmit="event.preventDefault(); rowperpage();"
+      method="post"
+    >
+      <label for="rowperpage">rowperpage</label>
+      <input type="number" name="rowperpage" id="rowperpage" />
+      <button type="submit">submit</button>
+    </form>
+
+    <div class="pagination">
+      <select name="pageno" id="pageno" onchange="selectpage()">
+        <option value="">--Select pageno--</option>
+        <option selected value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
 
     <h2 id="list">List</h2>
     <h2 id="premiumexpenses">weekly expenses</h2>
