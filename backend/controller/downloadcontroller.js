@@ -1,12 +1,10 @@
 const aws = require("aws-sdk");
 const expense = require("../model/expense");
 const downloadfile = require("../model/downloadmodel");
-const environment = "development"; // Change based on your environment
-const config = JSON.parse(process.env.CONFIG);
 
 const s3 = new aws.S3({
-  accessKeyId: config[environment].awsaccessKeyId,
-  secretAccessKey: config[environment].awssecretAccessKey,
+  accessKeyId: "AKIAR3QFIH3C76J3J5PN",
+  secretAccessKey: "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",
 });
 
 async function uploadToS3(data, filename) {

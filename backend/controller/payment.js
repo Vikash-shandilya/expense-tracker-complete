@@ -1,23 +1,19 @@
-require("dotenv").config();
 const { json } = require("body-parser");
 const order = require("../model/order");
 const user = require("../model/user");
 const Razorpay = require("razorpay");
 
-const environment = "development"; // Change based on your environment
-const config = JSON.parse(process.env.CONFIG);
 const razorpay = new Razorpay({
-  key_id: config[environment].razorpay_key_id,
-  key_secret: config[environment].razorpay_key_secret,
+  key_id: "rzp_test_p0SgRubxtD4AeR",
+  key_secret: "OMHc9SIYyDkFBUT9wuZuVHMW",
 });
 
 exports.getOrderDetails = (req, res, next) => {
-  console.log(process.env.razorpay_key_id, "key_id");
   console.log(req.user.id, "payment");
   const amount = 2500;
   razorpay.orders.create({ amount, currency: "INR" }, (err, response) => {
     if (err) {
-      console.log(JSON.stringify(err), "this is error");
+      console.log(JSON.stringify(err));
     }
 
     const newOrder = new order({

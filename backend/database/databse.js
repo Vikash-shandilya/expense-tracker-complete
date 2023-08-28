@@ -1,16 +1,8 @@
-const Sequelize = require("sequelize");
-const environment = "development"; // Change based on your environment
-const config = JSON.parse(process.env.CONFIG);
+const sequelize = require("sequelize");
 
-const expenses = new Sequelize(
-  config[environment].schema_name,
-  config[environment].database_username,
-  config[environment].database_password,
-  {
-    dialect: "mysql",
-    host: "localhost",
-    // You can add more options here if needed
-  }
-);
+const expenses = new sequelize("expenses", "root", "localhost", {
+  dialect: "mysql",
+  host: "localhost",
+});
 
 module.exports = expenses;
