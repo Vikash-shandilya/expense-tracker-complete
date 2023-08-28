@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const sendinblue = require("@getbrevo/brevo");
 const forgotpasstable = require("../model/forgotpass");
 
+require("dotenv").config();
 const secret_key = "vikashkumarjha";
 exports.submitform = async (req, res, next) => {
   const name = req.body.name;

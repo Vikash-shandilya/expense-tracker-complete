@@ -1,0 +1,23 @@
+{
+    "development": {
+      "awsaccessKeyId": "AKIAR3QFIH3CWIJGLKWS",
+      "awssecretAccessKey": "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",
+      "razorpay_key_id": "rzp_test_PiQTwBF6xdqIZl",
+      "razorpay_key_secret": "AhUuWiGPxXGuhZmGxvDET9jO",
+      "sendinblue_api_key": "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",
+      "schema_name": "expenses",
+      "database_password": "localhost",
+      "database_username": "root"
+    },
+    "production": {
+      "awsaccessKeyId": "your_production_key",
+      "awssecretAccessKey": "your_production_secret",
+      "razorpay_key_id": "your_production_key_id",
+      "razorpay_key_secret": "your_production_key_secret",
+      "sendinblue_api_key": "your_production_api_key",
+      "schema_name": "your_production_schema",
+      "database_password": "your_production_password",
+      "database_username": "your_production_username"
+    }
+  }
+  
