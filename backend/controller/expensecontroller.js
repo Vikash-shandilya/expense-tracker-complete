@@ -26,7 +26,7 @@ exports.addexpense = (req, res, next) => {
           { where: { id: req.user.id } },
           { transaction: t }
         );
-        console.log("first line");
+
         let previous_expenses = userfound.total_expenses;
 
         if (previous_expenses === null) {
@@ -56,7 +56,6 @@ exports.deleted = async (req, res, next) => {
 
   try {
     const deleteditem = await expense.findByPk(productid);
-    console.log(deleteditem);
 
     if (!deleteditem) {
       return res.status(404).json({ message: "Expense not found" });
