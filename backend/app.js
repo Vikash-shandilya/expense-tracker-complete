@@ -1,11 +1,17 @@
 const express = require("express");
 const bodyparser = require("body-parser");
 const cors = require("cors");
-const sequelize = require("./database/databse");
 const helmet = require("helmet");
 const morgon = require("morgan");
 const fs = require("fs");
 const path = require("path");
+
+const configloader = require("./configloader");
+configloader(); //this will load the config file
+const environment = "development"; // Change based on your environment
+const config = JSON.parse(process.env.CONFIG);
+
+const sequelize = require("./database/databse");
 
 const userroute = require("./router/userroute");
 const expenseroute = require("./router/expenserouter");
@@ -21,7 +27,6 @@ const order = require("./model/order");
 const forgotpasstable = require("./model/forgotpass");
 const downloadmodel = require("./model/downloadmodel");
 
-require("dotenv").config();
 const app = express();
 
 app.use(helmet());
@@ -49,7 +54,6 @@ forgotpasstable.belongsTo(usermodel);
 
 usermodel.hasMany(downloadmodel);
 downloadmodel.belongsTo(usermodel);
-console.log(process.env.database_username, "pass");
 
 sequelize
   .sync()

@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 const sendinblue = require("@getbrevo/brevo");
 const forgotpasstable = require("../model/forgotpass");
 
+const environment = "development"; // Change based on your environment
+const config = JSON.parse(process.env.CONFIG);
+
 const secret_key = "vikashkumarjha";
 exports.submitform = async (req, res, next) => {
   const name = req.body.name;
@@ -74,7 +77,7 @@ exports.passwordreset = async (req, res, next) => {
       const token = await generatetoken(userfound.dataValues.id);
 
       defaultClient.authentications["api-key"].apiKey =
-        process.env.sendinblue_api_key;
+        config[environment].sendinblue_api_key;
 
       const apiInstance = new sendinblue.TransactionalEmailsApi();
       const sendSmtpEmail = new sendinblue.SendSmtpEmail();
@@ -112,14 +115,13 @@ async function generatetoken(id) {
 }
 
 exports.passwordresetfinal = async (req, res, next) => {
-  console.log(req.params, req.body);
   const token = req.params.token;
   const newpassword = req.body.password;
 
   const ifExist = await forgotpasstable.findOne({
     where: { id: token, isActive: true },
   });
-  console.log(token, newpassword, ifExist);
+
   if (ifExist.isActive) {
     const userid = ifExist.userId;
     const userdetails = await user.findOne({ where: { id: userid } });
