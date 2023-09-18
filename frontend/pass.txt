@@ -1,4 +1,0 @@
-key_id,key_secret
-rzp_test_ahHdCy6I7ZLyqR,JhbXKU4ixLBQYPaFzyfLkKFD
-
-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

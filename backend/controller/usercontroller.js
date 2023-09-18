@@ -25,8 +25,8 @@ exports.submitform = async (req, res, next) => {
         phone_number: phone_number,
         password: hashedpassword,
       })
-      .then((res) => {
-        console.log(res);
+      .then((result) => {
+        res.json(true);
       });
   }
 };

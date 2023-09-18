@@ -9,8 +9,9 @@ const expenses = new sequelize(
   config[environment].database_password,
   {
     dialect: "mysql",
-    host: "localhost",
+    host: "database-1.chizv1y3xg8w.eu-north-1.rds.amazonaws.com",
   }
 );
 
 module.exports = expenses;
+

@@ -28,21 +28,36 @@ const forgotpasstable = require("./model/forgotpass");
 const downloadmodel = require("./model/downloadmodel");
 
 const app = express();
+app.use(function (req, res, next) {
+  res.setHeader('Content-Security-Policy', "default-src 'self'; font-src 'self'; img-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js; style-src 'self'; frame-src 'self'");
+  next();
+});
 
-app.use(helmet());
+
+//app.use(helmet())
 app.use(cors());
 app.use(bodyparser.json());
 const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
   flags: "a",
 });
-app.use(morgon("combined", { stream: logStream }));
+//app.use(morgon("combined", { stream: logStream }));
 
+// Serve static files from the "public/frontend" directory
+app.use(express.static(path.join(__dirname, "public/frontend")));
+
+// Your API route middlewares here
 app.use(userroute);
 app.use(expenseroute);
 app.use(orderroute);
 app.use(leaderroute);
 app.use(premiumroute);
 app.use(downloadroute);
+
+// This route will only be reached if no other routes match
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, `public/frontend/${req.url}`));
+});
+
 usermodel.hasMany(expensesmodel);
 expensesmodel.belongsTo(usermodel);
 
